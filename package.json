@@ -1,6 +1,6 @@
 {
 	"name": "@dankolz/indexeddb-data-service",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "",
 	"main": "indexeddb-data-service-sift.js",
 	"scripts": {
@@ -20,8 +20,13 @@
 		"pm2-bg": "parallelshell 'npm run dev-less-watch' 'npm run dev-client-js-watch' 'npm run dev-server-js-watch'",
 		"dev": "parallelshell 'npm run start' 'npm run dev-less-watch' 'npm run dev-client-js-watch'"
 	},
-	"keywords": [],
-	"author": "",
+	  "repository": {
+		"type": "git",
+		"url": "git+https://github.com/EmergentIdeas/indexeddb-data-service.git"
+	  },
+
+	"keywords": ["indexeddb", "data", "service"],
+	"author": "Dan Kolz (Emergent Ideas)",
 	"license": "ISC",
 	"dependencies": {
 		"sift": "^17.0.1"
