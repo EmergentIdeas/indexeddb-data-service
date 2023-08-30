@@ -39,8 +39,10 @@ describe("basic data operations", async function () {
 	it("ops", async function () {
 		let p = new Promise(async (resolve, reject) => {
 			try {
+				console.time('init')
 				let events = new EventEmitter()
 				let serv = await genStore(events)
+				console.timeEnd('init')
 				
 				events.on('object-change', (one, two) => {
 					console.log(`object change: ${JSON.stringify(one)} ${two}`)
@@ -49,10 +51,12 @@ describe("basic data operations", async function () {
 				let dat = {
 					msg: 'hello'
 				}
+				console.time('save')
 				let [r] = await serv.save(Object.assign({}, dat))
 				assert.isNotNull(r.id)
 				let id2 = r.id
 				let id = id2
+				console.timeEnd('save')
 
 				let result = await serv.fetch()
 				assert.equal(result.length, 1)
@@ -96,7 +100,9 @@ describe("basic data operations", async function () {
 				result = await serv.fetch({})
 				assert.equal(result.length, 2)
 				
+				console.time('fetch by id')
 				result = await serv.fetchOne(ids)
+				console.timeEnd('fetch by id')
 				assert.isNotNull(result)
 
 				result = await serv.fetchOne(ids2)
@@ -119,12 +125,16 @@ describe("basic data operations", async function () {
 
 				await serv.save({name: 'Kolz', count: 2})
 				await serv.save({name: 'Kolz', count: 3})
+				console.time('fetch by name')
 				result = await serv.fetch({name: 'Kolz'})
+				console.timeEnd('fetch by name')
 				assert.equal(result.length, 3)
 				
 				result = await serv.fetch({})
 				assert.equal(result.length, 5)
+				console.time('fetch all')
 				result = await serv.fetch()
+				console.timeEnd('fetch all')
 				assert.equal(result.length, 5)
 				
 				await serv.remove({})
@@ -139,6 +149,18 @@ describe("basic data operations", async function () {
 				await serv.remove()
 				result = await serv.fetch()
 				assert.equal(result.length, 0)
+				
+				
+				let buffer = new Uint8Array(10)
+				crypto.getRandomValues(buffer)
+				let file = {
+					content: buffer
+				}
+				console.log(buffer)
+				await serv.save(file)
+				let file2 = await serv.fetchOne(file.id)
+				console.log(file2.content)
+
 			}
 			catch(e) {
 				console.log(e)
